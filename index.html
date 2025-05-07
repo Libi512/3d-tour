@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>3D Journey of UOS</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: url('uos.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      backdrop-filter: brightness(0.9);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      max-width: 1200px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 15px;
+      margin-top: 20px;
+      position: relative;
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    header img {
+      width: 85px;
+      margin-right: 15px;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      color: #1e3c72;
+      margin: 0;
+    }
+
+    header .header-links {
+      display: flex;
+      gap: 20px;
+      position: relative;
+    }
+
+    header .header-link {
+      font-size: 1.2rem;
+      color: #1e3c72;
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    header .header-link:hover {
+      color: #c9b037;
+    }
+
+    .locations {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      width: 90%;
+      max-width: 1200px;
+      margin: 30px 0;
+    }
+
+    .location-card {
+      background: #fff;
+      border-radius: 15px;
+      padding: 15px;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s, border 0.3s;
+      cursor: pointer;
+      border: 2px solid transparent;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .location-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      border: 2px solid #c9b037;
+    }
+
+    .location-card h2 {
+      margin: 15px 0 10px;
+      font-size: 1.4rem;
+      color: #1e3c72;
+    }
+
+    .location-card p {
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    .location-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    footer {
+      background-color: #0b2c4d;
+      color: white;
+      padding: 2rem;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .footer-section {
+      flex: 1;
+      margin: 1rem;
+      min-width: 250px;
+    }
+
+    .footer-section h3 {
+      margin-top: 0;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding: 1rem;
+      background-color: #06223b;
+      font-size: 0.9rem;
+      width: 100%;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1001;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-content {
+  background-color: #fefefe;
+  padding: 20px;
+  border-radius: 15px;
+  width: 70%; 
+  max-width: 800px;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+    .modal-content .close {
+      color: #aaa;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .modal-content .close:hover,
+    .modal-content .close:focus {
+      color: black;
+      text-decoration: none;
+    }
+
+    .guide-section {
+      width: 250px;
+      text-align: left;
+      padding: 20px;
+      position: relative;
+    }
+
+    .guide-section h4 {
+      color: #1e3c72;
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+
+    .guide-item {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    .guide-item img {
+      width: 35px;
+      margin-right: 10px;
+    }
+
+    .guide-item span {
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .guide-section button {
+      background: #D4AF37;
+      color: white;
+      padding: 10px 30px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      position: relative;
+      margin-top: 15px;
+    }
+
+    /* Custom Styles for Guidelines Box */
+    #guidelinesBox {
+      display: none;
+      position: absolute;
+      top: 50px; /* show a bit below the Guidelines link */
+      right: 0;
+      z-index: 1002;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    /* About team layout horizontal */
+    .team-member {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+    }
+
+    .team-member div {
+      text-align: center;
+    }
+
+    .team-member img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+    /* Sports Ground links */
+    .sports-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .sport-link {
+      padding: 10px;
+      background: #1e3c72;
+      color: #fff;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .sport-link:hover {
+      background: #c9b037;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="uos logo.png" alt="UOS Logo">
+      <h1>Enjoy 3D Journey of UOS</h1>
+    </div>
+    <div class="header-links">
+      <a href="#" class="header-link" onclick="openAboutModal(event)">About</a>
+      <a href="#" class="header-link" onclick="toggleGuidelinesBox(event)">Guidelines</a>
+      <!-- Guidelines Box -->
+      <div id="guidelinesBox">
+        <div class="guide-section">
+          <h4>Help / Guide</h4>
+          <div class="guide-item"><img src="direction.png" alt="Move Forward"><span>Move Forward</span></div>
+          <div class="guide-item"><img src="info.jpg" alt="Get Info"><span>Get Information</span></div>
+          <div class="guide-item"><img src="video.webp" alt="Video"><span>Watch Videos</span></div>
+          <div class="guide-item"><img src="zoom in.jpg" alt="Zoom In"><span>Zoom In</span></div>
+          <div class="guide-item"><img src="zoom out.png" alt="Zoom Out"><span>Zoom Out</span></div>
+          <button onclick="window.location.href='3d image.html';">Start Tour</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="locations">
+    <a href="#" class="location-card">
+      <img src="library.jpg" alt="Library">
+      <h2>Library</h2>
+      <p>Discover the knowledge hub of UOS.</p>
+    </a>
+    <a href="#" class="location-card">
+      <img src="multi hall.jpg" alt="Multipurpose Hall">
+      <h2>Multipurpose Hall</h2>
+      <p>Host a variety of events seamlessly.</p>
+    </a>
+    <a href="#" class="location-card">
+      <img src="Cafe one.jpg" alt="Cafe One">
+      <h2>Cafe One</h2>
+      <p>Enjoy premium food and drinks.</p>
+    </a>
+    <a href="#" class="location-card">
+      <img src="prime cafe.jpg" alt="Prime Cafe">
+      <h2>Prime Cafe</h2>
+      <p>Great spot to relax and eat.</p>
+    </a>
+    <a href="#" class="location-card">
+      <img src="gym2.jpg" alt="Gym">
+      <h2>Gym</h2>
+      <p>State-of-the-art fitness facilities.</p>
+    </a>
+    <div class="location-card" onclick="openGroundModal()">
+      <img src="ground.jpeg" alt="Sports Ground">
+      <h2>Sports Ground</h2>
+      <p>Various sports fields available.</p>
+    </div>
+    <a href="#" class="location-card">
+      <img src="path.jpeg" alt="Road Path">
+      <h2>Road Path</h2>
+      <p>Walk along beautiful pathways.</p>
+    </a>
+  </div>
+
+  <!-- About Modal -->
+  <div id="aboutModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeAboutModal()">&times;</span>
+      <h2>Our Team</h2>
+      <div class="team-member">
+        <div>
+          <img src="member1.jpg" alt="Laiba Ahsan">
+          <h3>Laiba Ahsan</h3>
+          <p>BSIT51F21S009</p>
+        </div>
+        <div>
+          <img src="member2.jpg" alt="Ayesha Abid">
+          <h3>Ayesha Abid</h3>
+          <p>BSIT51F21R019</p>
+        </div>
+        <div>
+          <img src="member3.jpg" alt="Ameer Hamza">
+          <h3>Ameer Hamza</h3>
+          <p>BSIT51F21R004</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sports Ground Modal -->
+  <div id="groundModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeGroundModal()">&times;</span>
+      <h2>Sports Grounds</h2>
+      <div class="sports-options">
+        <a href="#" class="sport-link">Cricket Ground</a>
+        <a href="#" class="sport-link">Football Ground</a>
+        <a href="#" class="sport-link">Basketball Ground</a>
+        <a href="#" class="sport-link">Tennis Ground</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-section">
+      <img src="uos logo.png" alt="Logo" style="width: 150px;"/>
+      <h2>University Of Sargodha</h2>
+    </div>
+    <div class="footer-section">
+      <h3>Contact</h3>
+      <p>Address: University Road, Sargodha, Pakistan</p>
+      <p>Email: info@uos.edu.pk</p>
+      <p>Phone: +92 123 456 789</p>
+    </div>
+  </footer>
+
+  <div class="footer-bottom">
+    <p>&copy; 2025 University of Sargodha. All rights reserved.</p>
+  </div>
+
+  <script>
+    function openAboutModal(event) {
+      document.getElementById('aboutModal').style.display = "block";
+      event.preventDefault();
+    }
+
+    function closeAboutModal() {
+      document.getElementById('aboutModal').style.display = "none";
+    }
+
+    function toggleGuidelinesBox(event) {
+      event.preventDefault();
+      const box = document.getElementById('guidelinesBox');
+      if (box.style.display === "block") {
+        box.style.display = "none";
+      } else {
+        box.style.display = "block";
+      }
+    }
+
+    function openGroundModal() {
+      document.getElementById('groundModal').style.display = "block";
+    }
+
+    function closeGroundModal() {
+      document.getElementById('groundModal').style.display = "none";
+    }
+  </script>
+
+</body>
+</html>
